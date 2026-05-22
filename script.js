@@ -1,26 +1,21 @@
-// Configuración de rutas - Verifica que estos nombres coincidan con tus archivos en /data/
 const FILES = {
     partes: 'data/partes_planta.csv',
     enfermedades: 'data/enfermedades.csv',
-    mapeo_loc: 'data/mapeo_localizacion.csv',
+    mapeo_loc: 'data/mapeo_enfermedades_localizacion.csv',
     sintomas: 'data/catalogo_sintomas.csv',
     signos: 'data/catalogo_signos.csv',
     criterios: 'data/diagnostico_criterio.csv',
     manejo: 'data/manejo_seguridad.csv'
 };
 
-let db = {}; // Almacén de datos
+let db = {};
 
-// Función Robusta para leer CSV (maneja comas dentro de comillas y saltos de línea Windows/Unix)
 async function fetchCSV(url) {
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
         const text = await response.text();
-        
-        // Limpiamos retornos de carro y dividimos por líneas
         const rows = text.replace(/\r/g, '').split('\n').filter(row => row.trim() !== "");
-        
         return rows.slice(1).map(row => {
             let cells = [];
             let cell = "";
@@ -38,14 +33,12 @@ async function fetchCSV(url) {
             return cells;
         });
     } catch (e) {
-        console.error(`Error cargando ${url}:`, e);
+        console.error(`Error en ${url}:`, e);
         return [];
     }
 }
 
-// Inicialización
 async function initApp() {
-    console.log("Iniciando carga de datos técnicos...");
     db.partes = await fetchCSV(FILES.partes);
     db.enfermedades = await fetchCSV(FILES.enfermedades);
     db.mapeo_loc = await fetchCSV(FILES.mapeo_loc);
@@ -55,54 +48,38 @@ async function initApp() {
     db.manejo = await fetchCSV(FILES.manejo);
 
     if (db.partes.length > 0) {
-        poblarLocalizaciones();
-        console.log("Sistema listo. Localizaciones cargadas.");
-    } else {
-        alert("Error: No se pudieron cargar los datos. Verifica la carpeta /data/ y que uses un servidor (GitHub o Live Server).");
+        const select = document.getElementById('select-localizacion');
+        db.partes.forEach(p => {
+            let opt = document.createElement('option');
+            opt.value = p; // ID (L01, L02...)
+            opt.textContent = p[1]; // Nombre (Hoja, Fruto...)
+            select.appendChild(opt);
+        });
     }
 }
 
-// 1. Llenar el menú "Dónde observa el daño"
-function poblarLocalizaciones() {
-    const select = document.getElementById('select-localizacion');
-    select.innerHTML = '<option value="">Seleccione parte de la planta...</option>';
-    
-    db.partes.forEach(p => {
-        if (p.length >= 2) {
-            let opt = document.createElement('option');
-            opt.value = p;       // ID (Ej: L01)
-            opt.textContent = p[1]; // Nombre (Ej: Semilla)
-            select.appendChild(opt);
-        }
-    });
-}
-
-// 2. Al cambiar Localización -> Filtrar Síntomas según la Guía
+// FILTRADO DE SÍNTOMAS (CORREGIDO)
 document.getElementById('select-localizacion').addEventListener('change', (e) => {
     const locId = e.target.value;
     const selectSintoma = document.getElementById('select-sintoma');
     const secSintomas = document.getElementById('sec-sintomas');
 
-    if (!locId) {
-        secSintomas.classList.add('hidden');
-        return;
-    }
+    if (!locId) return secSintomas.classList.add('hidden');
 
-    // Obtenemos IDs de enfermedades que afectan esa parte (Cuadro Resumen II [2, 3])
+    // 1. Buscamos enfermedades que afecten esa zona (Indice 2 del mapeo)
     const enfermedadesIds = db.mapeo_loc
-        .filter(m => m[4] === locId)
+        .filter(m => m[2] === locId)
         .map(m => m[1]);
 
-    // Obtenemos IDs de síntomas vinculados a esas enfermedades
+    // 2. Buscamos los síntomas de esas enfermedades (Indice 1 y 2 de criterios)
     const sintomasIds = db.criterios
         .filter(c => enfermedadesIds.includes(c[1]))
-        .map(c => c[4]);
+        .map(c => c[2]);
 
-    // Limpiar y poblar síntomas únicos
     selectSintoma.innerHTML = '<option value="">Seleccione un síntoma...</option>';
-    const sintomasUnicos = [...new Set(sintomasIds)];
+    const unicos = [...new Set(sintomasIds)];
     
-    sintomasUnicos.forEach(sId => {
+    unicos.forEach(sId => {
         const sInfo = db.sintomas.find(s => s === sId);
         if (sInfo) {
             let opt = document.createElement('option');
@@ -113,30 +90,22 @@ document.getElementById('select-localizacion').addEventListener('change', (e) =>
     });
 
     secSintomas.classList.remove('hidden');
-    document.getElementById('sec-signos').classList.add('hidden');
-    document.getElementById('resultado').classList.add('hidden');
 });
 
-// 3. Al cambiar Síntoma -> Mostrar Signos de confirmación
+// EVENTO DE SÍNTOMA A SIGNO
 document.getElementById('select-sintoma').addEventListener('change', (e) => {
     const sId = e.target.value;
     const selectSigno = document.getElementById('select-signo');
     const secSignos = document.getElementById('sec-signos');
 
-    if (!sId) {
-        secSignos.classList.add('hidden');
-        return;
-    }
+    if (!sId) return secSignos.classList.add('hidden');
 
-    // Buscamos si hay signos biológicos asociados a este síntoma (Ej: esclerocios, zooglea [5, 6])
     const signosIds = db.criterios
-        .filter(c => c[4] === sId && c[7] !== "")
-        .map(c => c[7]);
+        .filter(c => c[2] === sId && c[3] !== "")
+        .map(c => c[3]);
 
     selectSigno.innerHTML = '<option value="NINGUNO">Ninguno / No se observa</option>';
-    const signosUnicos = [...new Set(signosIds)];
-
-    signosUnicos.forEach(sgId => {
+    [...new Set(signosIds)].forEach(sgId => {
         const sgInfo = db.signos.find(sg => sg === sgId);
         if (sgInfo) {
             let opt = document.createElement('option');
@@ -147,7 +116,7 @@ document.getElementById('select-sintoma').addEventListener('change', (e) => {
     });
 
     secSignos.classList.remove('hidden');
-    mostrarResultado(); 
+    mostrarResultado();
 });
 
 document.getElementById('select-signo').addEventListener('change', mostrarResultado);
@@ -159,10 +128,9 @@ function mostrarResultado() {
 
     if (!sId) return;
 
-    // Buscamos la enfermedad que encaje con la combinación síntoma/signo
     let match = db.criterios.find(c => {
-        if (sgId !== "NINGUNO") return c[4] === sId && c[7] === sgId;
-        return c[4] === sId;
+        if (sgId !== "NINGUNO") return c[2] === sId && c[3] === sgId;
+        return c[2] === sId;
     });
 
     if (match) {
@@ -171,24 +139,14 @@ function mostrarResultado() {
         const manejoInfo = db.manejo.find(m => m[1] === enfId);
 
         document.getElementById('diag-nombre').textContent = enfInfo ? enfInfo[1] : "Desconocida";
-        document.getElementById('diag-agente').textContent = `Agente: ${enfInfo ? enfInfo[4] : "No determinado"}`;
-        document.getElementById('diag-manejo').textContent = manejoInfo ? manejoInfo[4] : "Consulte la guía.";
+        document.getElementById('diag-agente').textContent = `Agente: ${enfInfo ? enfInfo[2] : "No determinado"}`;
+        document.getElementById('diag-manejo').textContent = manejoInfo ? manejoInfo[2] : "Consulte la guía.";
         
         const alerta = document.getElementById('alerta-seguridad');
-        const toxicidad = manejoInfo ? manejoInfo[8] : '';
-        alerta.textContent = `Riesgo: ${toxicidad}`;
-        alerta.style.backgroundColor = obtenerColorMarbete(toxicidad);
+        const tox = manejoInfo ? manejoInfo[4] : '';
+        alerta.textContent = `Alerta de Seguridad: ${tox}`;
+        alerta.style.backgroundColor = tox.includes('Verde') ? '#2ecc71' : tox.includes('Azul') ? '#3498db' : tox.includes('Amarillo') ? '#f1c40f' : tox.includes('Rojo') ? '#e74c3c' : '#bdc3c7';
 
         resDiv.classList.remove('hidden');
     }
 }
-
-function obtenerColorMarbete(texto) {
-    if (texto.includes('Verde')) return '#2ecc71';
-    if (texto.includes('Azul')) return '#3498db';
-    if (texto.includes('Amarillo')) return '#f1c40f';
-    if (texto.includes('Rojo')) return '#e74c3c';
-    return '#bdc3c7';
-}
-
-initApp();

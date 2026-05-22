@@ -1,9 +1,9 @@
-ID_Localizacion,Parte_de_la_Planta,Descripcion
-L01,Semilla,Material vegetal de propagación y vía de infección sistémica.
-L02,Raíz,Sistema radicular que incluye la raíz principal y secundarias.
-L03,Cuello,Zona de contacto entre el tallo y el suelo, de gran importancia en almácigos.
-L04,Tallo,Estructura herbácea principal y ramificaciones del tomate.
-L05,Hoja,Incluye folíolos y pecíolos, caracterizados por tener pelos pequeños.
-L06,Flores,Órganos reproductivos compuestos por pétalos y cáliz.
-L07,Fruto,Tomates en distintos estados de madurez comercial.
-L08,Toda la planta,Afecciones sistémicas que impactan el crecimiento general o el sistema vascular.
+ID_Localizacion,Parte_de_la_Planta,Descripcion_segun_la_fuente
+L01,Semilla,Material vegetal de propagación.
+L02,Raíz,Sistema radicular principal y secundarias.
+L03,Cuello,Zona de contacto entre el tallo y el suelo.
+L04,Tallo,Estructura herbácea principal y ramificaciones.
+L05,Hoja,Incluye folíolos y pecíolos con pelos pequeños.
+L06,Flores,Órganos reproductivos (pétalos y cáliz).
+L07,Fruto,Tomates en distintos estados de madurez.
+L08,Toda la planta,Afecciones sistémicas o generales.

@@ -1,3 +1,4 @@
+```js
 const FOLDER = './data/';
 
 const FILES = {
@@ -108,9 +109,11 @@ function poblarMenuInicial() {
         const opt =
             document.createElement('option');
 
-        opt.value = String(row[0]).trim();
+        opt.value =
+            String(row[0]).trim();
 
-        opt.textContent = row[1];
+        opt.textContent =
+            row[1];
 
         select.appendChild(opt);
     });
@@ -188,11 +191,8 @@ document.getElementById(
     const sintIds = db.criterios
         .filter(c => {
 
-            const idEnf =
-                String(c[1]).trim();
-
             return enfIds.includes(
-                idEnf
+                String(c[1]).trim()
             );
         })
         .map(c =>
@@ -236,7 +236,8 @@ document.getElementById(
 
             opt.value = sId;
 
-            opt.textContent = sData[1];
+            opt.textContent =
+                sData[1];
 
             selectSintoma.appendChild(
                 opt
@@ -425,10 +426,13 @@ function mostrarDiagnostico() {
     const eId =
         String(match[1]).trim();
 
+    // ======================================
     // enfermedades.csv
+    //
     // [0] ID_Enfermedad
     // [1] Nombre_Comun
     // [2] Agente_Causal
+    // ======================================
 
     const eData =
         db.enfermedades.find(e => {
@@ -439,19 +443,34 @@ function mostrarDiagnostico() {
             );
         });
 
+    console.log(
+        'ENFERMEDAD:',
+        eData
+    );
+
+    // ======================================
     // manejo_seguridad.csv
-    // [0] ID_Enfermedad
-    // [1] Manejo
-    // [2] Marbete
+    //
+    // [0] ID_Manejo
+    // [1] ID_Enfermedad
+    // [2] Recomendacion
+    // [3] Tipo
+    // [4] Alerta
+    // ======================================
 
     const mData =
         db.manejo.find(m => {
 
             return (
-                String(m[0]).trim() ===
+                String(m[1]).trim() ===
                 eId
             );
         });
+
+    console.log(
+        'MANEJO:',
+        mData
+    );
 
     document.getElementById(
         'diag-nombre'
@@ -471,7 +490,7 @@ function mostrarDiagnostico() {
         'diag-manejo'
     ).textContent =
         mData
-            ? mData[1]
+            ? mData[2]
             : 'Consulte la guía técnica';
 
     const alerta =
@@ -481,7 +500,7 @@ function mostrarDiagnostico() {
 
     const tox =
         mData
-            ? mData[2]
+            ? mData[4]
             : '';
 
     alerta.textContent =
@@ -538,3 +557,4 @@ function mostrarDiagnostico() {
 // ======================================
 
 init();
+```

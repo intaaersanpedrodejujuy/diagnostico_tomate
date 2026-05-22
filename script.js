@@ -13,7 +13,7 @@ const FILES = {
 let db = {};
 
 // ======================================
-// PARSER CSV SIMPLE Y ROBUSTO
+// PARSER CSV
 // ======================================
 
 function parseCSV(text) {
@@ -33,7 +33,7 @@ function parseCSV(text) {
 }
 
 // ======================================
-// CARGA INICIAL
+// CARGA DE ARCHIVOS
 // ======================================
 
 async function init() {
@@ -46,28 +46,34 @@ async function init() {
 
                 console.log('Cargando:', file);
 
-                const r = await fetch(file);
+                const response = await fetch(file);
 
-                console.log(file, r.status);
+                console.log(
+                    file,
+                    response.status
+                );
 
-                if (!r.ok) {
+                if (!response.ok) {
+
                     throw new Error(
-                        'No se pudo cargar ' + file
+                        'No se pudo cargar: ' + file
                     );
                 }
 
-                return r.text();
+                return response.text();
             })
         );
 
-        const keys = Object.keys(FILES);
+        const keys =
+            Object.keys(FILES);
 
         keys.forEach((key, i) => {
 
-            db[key] = parseCSV(textos[i]);
+            db[key] =
+                parseCSV(textos[i]);
         });
 
-        console.log('BASE CARGADA:', db);
+        console.log('BASE:', db);
 
         poblarMenuInicial();
 
@@ -86,7 +92,7 @@ async function init() {
 }
 
 // ======================================
-// MENU INICIAL
+// MENU PARTE DE PLANTA
 // ======================================
 
 function poblarMenuInicial() {
@@ -102,8 +108,8 @@ function poblarMenuInicial() {
     db.partes.forEach(row => {
 
         // partes_planta.csv
-        // columna 0 = id
-        // columna 1 = nombre
+        // [0] ID_Localizacion
+        // [1] Parte_de_la_Planta
 
         const opt =
             document.createElement('option');
@@ -126,6 +132,11 @@ document.getElementById(
 
     const locId = e.target.value;
 
+    console.log(
+        'LOCALIZACION:',
+        locId
+    );
+
     const secSintomas =
         document.getElementById(
             'sec-sintomas'
@@ -138,39 +149,39 @@ document.getElementById(
 
     if (!locId) {
 
-        secSintomas.classList.add('hidden');
+        secSintomas.classList.add(
+            'hidden'
+        );
 
         return;
     }
 
+    // ======================================
     // mapeo_localizacion.csv
-    // [0] id_localizacion
-    // [1] id_enfermedad
-    
+    //
+    // [0] ID interno
+    // [1] ID_Enfermedad
+    // [2] ID_Localizacion
+    // ======================================
 
     const enfIds = db.mapeo
-        .filter(m => m[0] === locId)
+        .filter(m =>
+            m[2] === locId
+        )
         .map(m => m[1]);
 
-    // diagnostico_cr```js id="q3m3b5"
-const enfIds = db.mapeo
-    .filter(m => {
+    console.log(
+        'ENFERMEDADES:',
+        enfIds
+    );
 
-        return String(m[0]).trim() ===
-               String(locId).trim();
-    })
-    .map(m => String(m[1]).trim());
-
-console.log("LOCALIZACION:", locId);
-
-console.log("ENFERMEDADES:", enfIds);
-
-
-    
-iterio.csv
-    // [0] id_enfermedad
-    // [1] id_sintoma
-    // [2] id_signo
+    // ======================================
+    // diagnostico_criterio.csv
+    //
+    // [0] ID_Enfermedad
+    // [1] ID_Sintoma
+    // [2] ID_Signo
+    // ======================================
 
     const sintIds = db.criterios
         .filter(c =>
@@ -178,7 +189,13 @@ iterio.csv
         )
         .map(c => c[1]);
 
-    const unicos = [...new Set(sintIds)];
+    console.log(
+        'SINTOMAS:',
+        sintIds
+    );
+
+    const unicos =
+        [...new Set(sintIds)];
 
     selectSintoma.innerHTML =
         '<option value="">Seleccione un síntoma...</option>';
@@ -186,13 +203,19 @@ iterio.csv
     unicos.forEach(sId => {
 
         // catalogo_sintomas.csv
-        // [0] id
-        // [1] nombre
+        // [0] ID_Sintoma
+        // [1] Descripcion_Sintoma
 
         const sData =
             db.sintomas.find(
                 s => s[0] === sId
             );
+
+        console.log(
+            'BUSCANDO SINTOMA:',
+            sId,
+            sData
+        );
 
         if (sData) {
 
@@ -207,15 +230,21 @@ iterio.csv
         }
     });
 
-    secSintomas.classList.remove('hidden');
+    secSintomas.classList.remove(
+        'hidden'
+    );
 
     document.getElementById(
         'sec-signos'
-    ).classList.add('hidden');
+    ).classList.add(
+        'hidden'
+    );
 
     document.getElementById(
         'resultado'
-    ).classList.add('hidden');
+    ).classList.add(
+        'hidden'
+    );
 });
 
 // ======================================
@@ -227,6 +256,11 @@ document.getElementById(
 ).addEventListener('change', e => {
 
     const sId = e.target.value;
+
+    console.log(
+        'SINTOMA:',
+        sId
+    );
 
     const selectSigno =
         document.getElementById(
@@ -240,31 +274,46 @@ document.getElementById(
 
     if (!sId) {
 
-        secSignos.classList.add('hidden');
+        secSignos.classList.add(
+            'hidden'
+        );
 
         return;
     }
 
-    const signoIds = db.criterios
+    const signoIds =
+        db.criterios
         .filter(c =>
             c[1] === sId &&
             c[2]
         )
         .map(c => c[2]);
 
+    console.log(
+        'SIGNOS:',
+        signoIds
+    );
+
     selectSigno.innerHTML =
         '<option value="NINGUNO">Ninguno / No se observa</option>';
 
-    [...new Set(signoIds)].forEach(sgId => {
+    [...new Set(signoIds)]
+    .forEach(sgId => {
 
         // catalogo_signos.csv
-        // [0] id
-        // [1] nombre
+        // [0] ID_Signo
+        // [1] Descripcion_Signo
 
         const sgData =
             db.signos.find(
                 sg => sg[0] === sgId
             );
+
+        console.log(
+            'BUSCANDO SIGNO:',
+            sgId,
+            sgData
+        );
 
         if (sgData) {
 
@@ -279,13 +328,15 @@ document.getElementById(
         }
     });
 
-    secSignos.classList.remove('hidden');
+    secSignos.classList.remove(
+        'hidden'
+    );
 
     mostrarDiagnostico();
 });
 
 // ======================================
-// CAMBIO DE SIGNO
+// CAMBIO SIGNO
 // ======================================
 
 document.getElementById(
@@ -318,42 +369,66 @@ function mostrarDiagnostico() {
 
     if (!sId) return;
 
-    let match = db.criterios.find(c => {
+    let match =
+        db.criterios.find(c => {
 
-        if (sgId !== 'NINGUNO') {
+            if (
+                sgId !== 'NINGUNO'
+            ) {
 
-            return (
-                c[1] === sId &&
-                c[2] === sgId
-            );
-        }
+                return (
+                    c[1] === sId &&
+                    c[2] === sgId
+                );
+            }
 
-        return c[1] === sId;
-    });
+            return c[1] === sId;
+        });
+
+    console.log(
+        'MATCH:',
+        match
+    );
 
     if (!match) return;
 
     const eId = match[0];
 
+    // ======================================
     // enfermedades.csv
-    // [0] id
-    // [1] nombre
-    // [2] agente
+    //
+    // [0] ID_Enfermedad
+    // [1] Nombre_Comun
+    // [2] Agente_Causal
+    // ======================================
 
     const eData =
         db.enfermedades.find(
             e => e[0] === eId
         );
 
+    console.log(
+        'ENFERMEDAD:',
+        eData
+    );
+
+    // ======================================
     // manejo_seguridad.csv
-    // [0] id_enfermedad
-    // [1] manejo
-    // [2] marbete
+    //
+    // [0] ID_Enfermedad
+    // [1] Manejo
+    // [2] Marbete
+    // ======================================
 
     const mData =
         db.manejo.find(
             m => m[0] === eId
         );
+
+    console.log(
+        'MANEJO:',
+        mData
+    );
 
     document.getElementById(
         'diag-nombre'
@@ -393,14 +468,18 @@ function mostrarDiagnostico() {
 
     alerta.className = '';
 
-    if (tox.toLowerCase().includes('verde')) {
+    if (
+        tox.toLowerCase()
+        .includes('verde')
+    ) {
 
         alerta.classList.add(
             'marbete-verde'
         );
     }
     else if (
-        tox.toLowerCase().includes('azul')
+        tox.toLowerCase()
+        .includes('azul')
     ) {
 
         alerta.classList.add(
@@ -408,7 +487,8 @@ function mostrarDiagnostico() {
         );
     }
     else if (
-        tox.toLowerCase().includes('amarillo')
+        tox.toLowerCase()
+        .includes('amarillo')
     ) {
 
         alerta.classList.add(
@@ -416,7 +496,8 @@ function mostrarDiagnostico() {
         );
     }
     else if (
-        tox.toLowerCase().includes('rojo')
+        tox.toLowerCase()
+        .includes('rojo')
     ) {
 
         alerta.classList.add(
@@ -424,7 +505,9 @@ function mostrarDiagnostico() {
         );
     }
 
-    res.classList.remove('hidden');
+    res.classList.remove(
+        'hidden'
+    );
 }
 
 // ======================================

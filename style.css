@@ -1,7 +1,0 @@
-body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 10px; line-height: 1.6; }
-section { margin-bottom: 20px; }
-label { display: block; font-weight: bold; margin-bottom: 5px; }
-select { width: 100%; padding: 8px; border-radius: 5px; }
-.hidden { display: none; }
-#resultado { border: 2px solid #2ecc71; padding: 15px; border-radius: 10px; background-color: #f9f9f9; }
-#alerta-seguridad { margin-top: 10px; padding: 10px; border-radius: 5px; font-weight: bold; text-align: center; }

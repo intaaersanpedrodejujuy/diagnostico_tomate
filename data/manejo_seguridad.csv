@@ -1,0 +1,27 @@
+ID_Manejo,ID_Enfermedad,Recomendacion,Tipo,Alerta
+M01,01,"Aplicar fungicidas protectores (carbamatos, clorotalonil, cúpricos).",Preventivo,Ver Marbete
+M02,02,"Uso de variedades resistentes; rotación de cultivos y descomposición de restos.",Preventivo,Ver Marbete
+M03,03,"Sanidad de semilla; mantener pH próximo a 6.5; evitar fertilización amoniacal si hay infección.",Preventivo,Ver Marbete
+M04,04,"Eliminar malezas hospederas; monitoreo continuo y aplicación de fungicidas preventivos.",Preventivo,Ver Marbete
+M05,05,"Solarización de sustratos; desinfección de agua con oxicloruro de cobre (3g/100L).",Preventivo,Verde (Cuidado)
+M06,06,"Ventilación de invernaderos; evitar exceso de nitrógeno; incorporar restos al suelo.",Preventivo,Ver Marbete
+M07,07,"Orientar y dimensionar estructuras bajo cubierta para favorecer la circulación de aire.",Preventivo,No aplica
+M08,08,"Uso de variedades resistentes y rápida descomposición de restos de cosecha.",Preventivo,Ver Marbete
+M09,09,"Incrementar materia orgánica (abonos verdes, guano); realizar solarización en casos severos.",Preventivo,No aplica (Sin químicos)
+M10,10,"Rotación con gramíneas y recolección manual de plantas enfermas para reducir inóculo.",Preventivo,Ver Marbete
+M11,11,"Aradas profundas o riegos inundativos para eliminar el patógeno por falta de oxígeno.",Preventivo,Ver Marbete
+M12,12,"Eliminación de malezas solanáceas y adecuado manejo del riego evitando excesos.",Preventivo,No aplica
+M13,13,"Disponer surcos según vientos predominantes; aplicaciones rotando productos para evitar resistencia.",Preventivo/Curativo,Ver Marbete
+M14,14,"No realizar movimientos de suelo o agua en lotes infectados; rotación con gramíneas.",Preventivo,No aplica
+M15,15,"Fertilización equilibrada; destrucción de restos vegetales y uso de semilla garantizada.",Preventivo,No aplica
+M16,16,"Desinfectar herramientas con hipoclorito de sodio al 10%; aplicar oxicloruro de cobre + mancozeb.",Preventivo/Curativo,Azul/Verde (Moderado)
+M17,17,"Evitar que las plantas toquen el suelo; ventilación adecuada y fertilización equilibrada.",Preventivo,Ver Marbete
+M18,18,"No realizar labores culturales con plantas mojadas; aplicar productos cúpricos tras el desbrote.",Preventivo,Ver Marbete
+M19,19,"Control estricto de mosca blanca; uso de insecticidas sistémicos en el trasplante.",Preventivo,Ver Marbete
+M20,20,"Control de poblaciones de pulgones y eliminación inmediata de plantas con síntomas.",Preventivo,Ver Marbete
+M21,21,"Mantener niveles bajos de trips; eliminación de malezas hospederas alternativas.",Preventivo,Ver Marbete
+M22,22,"Reducir poblaciones de mosca blanca; evitar la realización de cultivos escalonados.",Preventivo,Ver Marbete
+M23,23,"Desinfectar tierra de monte si se usa como sustrato; eliminar guías detectadas rápidamente.",Preventivo,No aplica
+M24,24,"Uso de mantas o mallas térmicas; implantación de cultivos en invernaderos protegidos.",Preventivo,No aplica
+M25,25,"Aplicación de agroquímicos preventivos para evitar infecciones oportunistas en plantas debilitadas.",Preventivo,Ver Marbete
+M26,26,"Pulverizaciones preventivas para evitar el ingreso de patógenos por las deformaciones del tejido.",Preventivo,Ver Marbete

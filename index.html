@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagnóstico Tomate - INTA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Guía de Enfermedades del Tomate</h1>
+        <p>Basado en la Guía de Consulta INTA</p>
+    </header>
+
+    <main id="app">
+        <section class="step">
+            <label>1. ¿En qué parte observa el daño?</label>
+            <select id="select-localizacion">
+                <option value="">Cargando datos...</option>
+            </select>
+        </section>
+
+        <section id="sec-sintomas" class="step hidden">
+            <label>2. ¿Qué síntoma principal detecta?</label>
+            <select id="select-sintoma">
+                <option value="">Seleccione un síntoma...</option>
+            </select>
+        </section>
+
+        <section id="sec-signos" class="step hidden">
+            <label>3. ¿Detecta algún signo visible (moho, polvo, etc.)?</label>
+            <select id="select-signo">
+                <option value="NINGUNO">Ninguno / No se observa</option>
+            </select>
+        </section>
+
+        <div id="resultado" class="hidden">
+            <div class="card">
+                <h2 id="diag-nombre"></h2>
+                <p><strong id="diag-agente"></strong></p>
+                <div class="manejo-box">
+                    <h3>Manejo Recomendado:</h3>
+                    <p id="diag-manejo"></p>
+                </div>
+                <div id="alerta-seguridad"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

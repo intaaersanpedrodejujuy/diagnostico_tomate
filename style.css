@@ -1,0 +1,12 @@
+body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f4f7f6; }
+.step { background: white; padding: 15px; margin-bottom: 10px; border-left: 5px solid #27ae60; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+label { font-weight: bold; color: #2c3e50; }
+select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; }
+.hidden { display: none; }
+.card { background: #fff; border: 2px solid #27ae60; padding: 20px; border-radius: 8px; margin-top: 20px; }
+.manejo-box { background: #e8f5e9; padding: 10px; border-radius: 4px; margin: 15px 0; }
+#alerta-seguridad { padding: 10px; text-align: center; border-radius: 4px; font-weight: bold; color: white; }
+.marbete-verde { background: #2ecc71; }
+.marbete-azul { background: #3498db; }
+.marbete-amarillo { background: #f1c40f; color: #000 !important; }
+.marbete-rojo { background: #e74c3c; } 

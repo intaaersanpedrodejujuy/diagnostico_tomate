@@ -1,4 +1,3 @@
-```js id="4yzwfj"
 const FOLDER = './data/';
 
 const FILES = {
@@ -147,12 +146,28 @@ document.getElementById(
     // mapeo_localizacion.csv
     // [0] id_localizacion
     // [1] id_enfermedad
+    
 
     const enfIds = db.mapeo
         .filter(m => m[0] === locId)
         .map(m => m[1]);
 
-    // diagnostico_criterio.csv
+    // diagnostico_cr```js id="q3m3b5"
+const enfIds = db.mapeo
+    .filter(m => {
+
+        return String(m[0]).trim() ===
+               String(locId).trim();
+    })
+    .map(m => String(m[1]).trim());
+
+console.log("LOCALIZACION:", locId);
+
+console.log("ENFERMEDADES:", enfIds);
+
+
+    
+iterio.csv
     // [0] id_enfermedad
     // [1] id_sintoma
     // [2] id_signo
@@ -417,4 +432,3 @@ function mostrarDiagnostico() {
 // ======================================
 
 init();
-```

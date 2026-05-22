@@ -10,12 +10,16 @@ const FILES = {
 
 let db = {};
 
+// Cargador de CSV con limpieza profunda de caracteres invisibles
 async function fetchCSV(url) {
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error(`Error: ${response.status}`);
+        if (!response.ok) throw new Error(`No se encontró el archivo: ${url}`);
         const text = await response.text();
+        
+        // Eliminamos caracteres de retorno de carro y espacios raros
         const rows = text.replace(/\r/g, '').split('\n').filter(row => row.trim() !== "");
+        
         return rows.slice(1).map(row => {
             let cells = [];
             let cell = "";
@@ -23,22 +27,23 @@ async function fetchCSV(url) {
             for (let char of row) {
                 if (char === '"') inQuotes = !inQuotes;
                 else if (char === ',' && !inQuotes) {
-                    cells.push(cell.trim());
+                    cells.push(cell.trim().replace(/^"|"$/g, '')); // Quita comillas y espacios
                     cell = "";
                 } else {
                     cell += char;
                 }
             }
-            cells.push(cell.trim());
+            cells.push(cell.trim().replace(/^"|"$/g, ''));
             return cells;
         });
     } catch (e) {
-        console.error(`Error en ${url}:`, e);
+        console.error(`Error crítico en ${url}:`, e);
         return [];
     }
 }
 
 async function initApp() {
+    console.log("--- Iniciando carga de base de datos técnica ---");
     db.partes = await fetchCSV(FILES.partes);
     db.enfermedades = await fetchCSV(FILES.enfermedades);
     db.mapeo_loc = await fetchCSV(FILES.mapeo_loc);
@@ -50,15 +55,18 @@ async function initApp() {
     if (db.partes.length > 0) {
         const select = document.getElementById('select-localizacion');
         db.partes.forEach(p => {
-            let opt = document.createElement('option');
-            opt.value = p; // ID (L01, L02...)
-            opt.textContent = p[1]; // Nombre (Hoja, Fruto...)
-            select.appendChild(opt);
+            if (p && p[1]) {
+                let opt = document.createElement('option');
+                opt.value = p; // ID: L01
+                opt.textContent = p[1]; // Nombre: Semilla
+                select.appendChild(opt);
+            }
         });
+        console.log("✔ Menú Localización cargado.");
     }
 }
 
-// FILTRADO DE SÍNTOMAS (CORREGIDO)
+// Lógica de filtrado de síntomas
 document.getElementById('select-localizacion').addEventListener('change', (e) => {
     const locId = e.target.value;
     const selectSintoma = document.getElementById('select-sintoma');
@@ -66,44 +74,52 @@ document.getElementById('select-localizacion').addEventListener('change', (e) =>
 
     if (!locId) return secSintomas.classList.add('hidden');
 
-    // 1. Buscamos enfermedades que afecten esa zona (Indice 2 del mapeo)
+    console.log(`Buscando enfermedades para localización: ${locId}`);
+
+    // 1. Filtrar mapeo para obtener IDs de enfermedades (Columna 2 es Localización, Columna 1 es Enfermedad)
     const enfermedadesIds = db.mapeo_loc
         .filter(m => m[2] === locId)
         .map(m => m[1]);
+    
+    console.log("Enfermedades encontradas:", enfermedadesIds);
 
-    // 2. Buscamos los síntomas de esas enfermedades (Indice 1 y 2 de criterios)
+    // 2. Filtrar criterios para obtener síntomas (Columna 1 es Enfermedad, Columna 2 es Síntoma)
     const sintomasIds = db.criterios
         .filter(c => enfermedadesIds.includes(c[1]))
         .map(c => c[2]);
 
+    console.log("IDs de síntomas vinculados:", sintomasIds);
+
+    // 3. Poblar el menú de síntomas
     selectSintoma.innerHTML = '<option value="">Seleccione un síntoma...</option>';
-    const unicos = [...new Set(sintomasIds)];
+    const unicosSintomas = [...new Set(sintomasIds)];
     
-    unicos.forEach(sId => {
+    unicosSintomas.forEach(sId => {
         const sInfo = db.sintomas.find(s => s === sId);
         if (sInfo) {
             let opt = document.createElement('option');
             opt.value = sId;
-            opt.textContent = sInfo[1];
+            opt.textContent = sInfo[1]; // Descripción del síntoma
             selectSintoma.appendChild(opt);
         }
     });
 
-    secSintomas.classList.remove('hidden');
+    if (unicosSintomas.length > 0) {
+        secSintomas.classList.remove('hidden');
+    } else {
+        console.warn("No se encontraron síntomas para los IDs:", sintomasIds);
+        alert("Atención: No hay síntomas mapeados para esta zona en los archivos CSV.");
+    }
 });
 
-// EVENTO DE SÍNTOMA A SIGNO
+// Eventos para el resto del flujo
 document.getElementById('select-sintoma').addEventListener('change', (e) => {
     const sId = e.target.value;
     const selectSigno = document.getElementById('select-signo');
     const secSignos = document.getElementById('sec-signos');
-
     if (!sId) return secSignos.classList.add('hidden');
 
-    const signosIds = db.criterios
-        .filter(c => c[2] === sId && c[3] !== "")
-        .map(c => c[3]);
-
+    const signosIds = db.criterios.filter(c => c[2] === sId && c[3]).map(c => c[3]);
     selectSigno.innerHTML = '<option value="NINGUNO">Ninguno / No se observa</option>';
     [...new Set(signosIds)].forEach(sgId => {
         const sgInfo = db.signos.find(sg => sg === sgId);
@@ -114,7 +130,6 @@ document.getElementById('select-sintoma').addEventListener('change', (e) => {
             selectSigno.appendChild(opt);
         }
     });
-
     secSignos.classList.remove('hidden');
     mostrarResultado();
 });
@@ -126,9 +141,7 @@ function mostrarResultado() {
     const sgId = document.getElementById('select-signo').value;
     const resDiv = document.getElementById('resultado');
 
-    if (!sId) return;
-
-    let match = db.criterios.find(c => {
+    const match = db.criterios.find(c => {
         if (sgId !== "NINGUNO") return c[2] === sId && c[3] === sgId;
         return c[2] === sId;
     });
@@ -138,15 +151,9 @@ function mostrarResultado() {
         const enfInfo = db.enfermedades.find(e => e === enfId);
         const manejoInfo = db.manejo.find(m => m[1] === enfId);
 
-        document.getElementById('diag-nombre').textContent = enfInfo ? enfInfo[1] : "Desconocida";
-        document.getElementById('diag-agente').textContent = `Agente: ${enfInfo ? enfInfo[2] : "No determinado"}`;
-        document.getElementById('diag-manejo').textContent = manejoInfo ? manejoInfo[2] : "Consulte la guía.";
-        
-        const alerta = document.getElementById('alerta-seguridad');
-        const tox = manejoInfo ? manejoInfo[4] : '';
-        alerta.textContent = `Alerta de Seguridad: ${tox}`;
-        alerta.style.backgroundColor = tox.includes('Verde') ? '#2ecc71' : tox.includes('Azul') ? '#3498db' : tox.includes('Amarillo') ? '#f1c40f' : tox.includes('Rojo') ? '#e74c3c' : '#bdc3c7';
-
+        document.getElementById('diag-nombre').textContent = enfInfo ? enfInfo[1] : "No identificado";
+        document.getElementById('diag-agente').textContent = `Agente Causal: ${enfInfo ? enfInfo[2] : "Consulte la guía"}`;
+        document.getElementById('diag-manejo').textContent = manejoInfo ? manejoInfo[2] : "Siga las recomendaciones generales de la guía.";
         resDiv.classList.remove('hidden');
     }
 }

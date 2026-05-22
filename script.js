@@ -1,3 +1,4 @@
+```js id="e6k2pv"
 const FOLDER = './data/';
 
 const FILES = {
@@ -33,7 +34,7 @@ function parseCSV(text) {
 }
 
 // ======================================
-// CARGA DE ARCHIVOS
+// CARGA INICIAL
 // ======================================
 
 async function init() {
@@ -46,7 +47,8 @@ async function init() {
 
                 console.log('Cargando:', file);
 
-                const response = await fetch(file);
+                const response =
+                    await fetch(file);
 
                 console.log(
                     file,
@@ -92,7 +94,7 @@ async function init() {
 }
 
 // ======================================
-// MENU PARTE DE PLANTA
+// MENU PARTE PLANTA
 // ======================================
 
 function poblarMenuInicial() {
@@ -178,16 +180,17 @@ document.getElementById(
     // ======================================
     // diagnostico_criterio.csv
     //
-    // [0] ID_Enfermedad
-    // [1] ID_Sintoma
-    // [2] ID_Signo
+    // [0] ID interno
+    // [1] ID_Enfermedad
+    // [2] ID_Sintoma
+    // [3] ID_Signo
     // ======================================
 
     const sintIds = db.criterios
         .filter(c =>
-            enfIds.includes(c[0])
+            enfIds.includes(c[1])
         )
-        .map(c => c[1]);
+        .map(c => c[2]);
 
     console.log(
         'SINTOMAS:',
@@ -284,10 +287,10 @@ document.getElementById(
     const signoIds =
         db.criterios
         .filter(c =>
-            c[1] === sId &&
-            c[2]
+            c[2] === sId &&
+            c[3]
         )
-        .map(c => c[2]);
+        .map(c => c[3]);
 
     console.log(
         'SIGNOS:',
@@ -372,17 +375,21 @@ function mostrarDiagnostico() {
     let match =
         db.criterios.find(c => {
 
+            // c[1] = enfermedad
+            // c[2] = sintoma
+            // c[3] = signo
+
             if (
                 sgId !== 'NINGUNO'
             ) {
 
                 return (
-                    c[1] === sId &&
-                    c[2] === sgId
+                    c[2] === sId &&
+                    c[3] === sgId
                 );
             }
 
-            return c[1] === sId;
+            return c[2] === sId;
         });
 
     console.log(
@@ -392,7 +399,7 @@ function mostrarDiagnostico() {
 
     if (!match) return;
 
-    const eId = match[0];
+    const eId = match[1];
 
     // ======================================
     // enfermedades.csv
@@ -515,3 +522,4 @@ function mostrarDiagnostico() {
 // ======================================
 
 init();
+```

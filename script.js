@@ -1,3 +1,4 @@
+```js id="4yzwfj"
 const FOLDER = './data/';
 
 const FILES = {
@@ -12,40 +13,39 @@ const FILES = {
 
 let db = {};
 
-// ======================
-// PARSER CSV
-// ======================
+// ======================================
+// PARSER CSV SIMPLE Y ROBUSTO
+// ======================================
 
 function parseCSV(text) {
 
-    const rows = text
+    return text
         .replace(/\r/g, '')
+        .trim()
         .split('\n')
-        .filter(r => r.trim() !== '');
-
-    return rows.slice(1).map(row => {
-
-        const matches =
-            row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-
-        return matches.map(v =>
-            v.replace(/^"|"$/g, '').trim()
+        .slice(1)
+        .map(line =>
+            line
+                .split(',')
+                .map(v =>
+                    v.trim().replace(/^"|"$/g, '')
+                )
         );
-    });
 }
 
-// ======================
+// ======================================
 // CARGA INICIAL
-// ======================
+// ======================================
 
 async function init() {
 
     try {
 
-        const responses = await Promise.all(
+        const textos = await Promise.all(
+
             Object.values(FILES).map(async file => {
 
-                console.log("Cargando:", file);
+                console.log('Cargando:', file);
 
                 const r = await fetch(file);
 
@@ -53,7 +53,7 @@ async function init() {
 
                 if (!r.ok) {
                     throw new Error(
-                        `No se pudo cargar ${file}`
+                        'No se pudo cargar ' + file
                     );
                 }
 
@@ -64,29 +64,31 @@ async function init() {
         const keys = Object.keys(FILES);
 
         keys.forEach((key, i) => {
-            db[key] = parseCSV(responses[i]);
+
+            db[key] = parseCSV(textos[i]);
         });
 
-        console.log("BASE:", db);
+        console.log('BASE CARGADA:', db);
 
         poblarMenuInicial();
 
-    } catch (err) {
+    }
+    catch(err) {
 
         console.error(err);
+
+        alert(err.message);
 
         document.getElementById(
             'select-localizacion'
         ).innerHTML =
             '<option>Error al cargar datos</option>';
-
-        alert(err.message);
     }
 }
 
-// ======================
+// ======================================
 // MENU INICIAL
-// ======================
+// ======================================
 
 function poblarMenuInicial() {
 
@@ -101,10 +103,10 @@ function poblarMenuInicial() {
     db.partes.forEach(row => {
 
         // partes_planta.csv
-        // [0] = id
-        // [1] = nombre
+        // columna 0 = id
+        // columna 1 = nombre
 
-        let opt =
+        const opt =
             document.createElement('option');
 
         opt.value = row[0];
@@ -115,9 +117,9 @@ function poblarMenuInicial() {
     });
 }
 
-// ======================
+// ======================================
 // LOCALIZACION -> SINTOMAS
-// ======================
+// ======================================
 
 document.getElementById(
     'select-localizacion'
@@ -143,20 +145,22 @@ document.getElementById(
     }
 
     // mapeo_localizacion.csv
-    // [0] = id_localizacion
-    // [1] = id_enfermedad
+    // [0] id_localizacion
+    // [1] id_enfermedad
 
     const enfIds = db.mapeo
         .filter(m => m[0] === locId)
         .map(m => m[1]);
 
     // diagnostico_criterio.csv
-    // [0] = id_enfermedad
-    // [1] = id_sintoma
-    // [2] = id_signo
+    // [0] id_enfermedad
+    // [1] id_sintoma
+    // [2] id_signo
 
     const sintIds = db.criterios
-        .filter(c => enfIds.includes(c[0]))
+        .filter(c =>
+            enfIds.includes(c[0])
+        )
         .map(c => c[1]);
 
     const unicos = [...new Set(sintIds)];
@@ -167,8 +171,8 @@ document.getElementById(
     unicos.forEach(sId => {
 
         // catalogo_sintomas.csv
-        // [0] = id
-        // [1] = nombre
+        // [0] id
+        // [1] nombre
 
         const sData =
             db.sintomas.find(
@@ -177,7 +181,7 @@ document.getElementById(
 
         if (sData) {
 
-            let opt =
+            const opt =
                 document.createElement('option');
 
             opt.value = sId;
@@ -199,9 +203,9 @@ document.getElementById(
     ).classList.add('hidden');
 });
 
-// ======================
+// ======================================
 // SINTOMA -> SIGNOS
-// ======================
+// ======================================
 
 document.getElementById(
     'select-sintoma'
@@ -228,7 +232,8 @@ document.getElementById(
 
     const signoIds = db.criterios
         .filter(c =>
-            c[1] === sId && c[2]
+            c[1] === sId &&
+            c[2]
         )
         .map(c => c[2]);
 
@@ -238,8 +243,8 @@ document.getElementById(
     [...new Set(signoIds)].forEach(sgId => {
 
         // catalogo_signos.csv
-        // [0] = id
-        // [1] = nombre
+        // [0] id
+        // [1] nombre
 
         const sgData =
             db.signos.find(
@@ -248,7 +253,7 @@ document.getElementById(
 
         if (sgData) {
 
-            let opt =
+            const opt =
                 document.createElement('option');
 
             opt.value = sgId;
@@ -264,9 +269,9 @@ document.getElementById(
     mostrarDiagnostico();
 });
 
-// ======================
-// DIAGNOSTICO
-// ======================
+// ======================================
+// CAMBIO DE SIGNO
+// ======================================
 
 document.getElementById(
     'select-signo'
@@ -274,6 +279,10 @@ document.getElementById(
     'change',
     mostrarDiagnostico
 );
+
+// ======================================
+// MOSTRAR DIAGNOSTICO
+// ======================================
 
 function mostrarDiagnostico() {
 
@@ -297,6 +306,7 @@ function mostrarDiagnostico() {
     let match = db.criterios.find(c => {
 
         if (sgId !== 'NINGUNO') {
+
             return (
                 c[1] === sId &&
                 c[2] === sgId
@@ -311,9 +321,9 @@ function mostrarDiagnostico() {
     const eId = match[0];
 
     // enfermedades.csv
-    // [0] = id
-    // [1] = nombre
-    // [2] = agente
+    // [0] id
+    // [1] nombre
+    // [2] agente
 
     const eData =
         db.enfermedades.find(
@@ -321,9 +331,9 @@ function mostrarDiagnostico() {
         );
 
     // manejo_seguridad.csv
-    // [0] = id_enfermedad
-    // [1] = manejo
-    // [2] = marbete
+    // [0] id_enfermedad
+    // [1] manejo
+    // [2] marbete
 
     const mData =
         db.manejo.find(
@@ -341,7 +351,7 @@ function mostrarDiagnostico() {
         'diag-agente'
     ).textContent =
         eData
-            ? `Agente: ${eData[2]}`
+            ? 'Agente: ' + eData[2]
             : '';
 
     document.getElementById(
@@ -349,7 +359,7 @@ function mostrarDiagnostico() {
     ).textContent =
         mData
             ? mData[1]
-            : 'Consulte la guía técnica.';
+            : 'Consulte la guía técnica';
 
     const alerta =
         document.getElementById(
@@ -357,29 +367,54 @@ function mostrarDiagnostico() {
         );
 
     const tox =
-        mData ? mData[2] : '';
+        mData
+            ? mData[2]
+            : '';
 
     alerta.textContent =
         tox
-            ? `Alerta Marbete: ${tox}`
+            ? 'Alerta Marbete: ' + tox
             : '';
 
     alerta.className = '';
 
     if (tox.toLowerCase().includes('verde')) {
-        alerta.classList.add('marbete-verde');
+
+        alerta.classList.add(
+            'marbete-verde'
+        );
     }
-    else if (tox.toLowerCase().includes('azul')) {
-        alerta.classList.add('marbete-azul');
+    else if (
+        tox.toLowerCase().includes('azul')
+    ) {
+
+        alerta.classList.add(
+            'marbete-azul'
+        );
     }
-    else if (tox.toLowerCase().includes('amarillo')) {
-        alerta.classList.add('marbete-amarillo');
+    else if (
+        tox.toLowerCase().includes('amarillo')
+    ) {
+
+        alerta.classList.add(
+            'marbete-amarillo'
+        );
     }
-    else if (tox.toLowerCase().includes('rojo')) {
-        alerta.classList.add('marbete-rojo');
+    else if (
+        tox.toLowerCase().includes('rojo')
+    ) {
+
+        alerta.classList.add(
+            'marbete-rojo'
+        );
     }
 
     res.classList.remove('hidden');
 }
 
+// ======================================
+// INICIO
+// ======================================
+
 init();
+```

@@ -1,4 +1,3 @@
-```js id="j4m8zp"
 const FOLDER = './data/';
 
 const FILES = {
@@ -539,4 +538,3 @@ function mostrarDiagnostico() {
 // ======================================
 
 init();
-```

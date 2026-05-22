@@ -1,4 +1,3 @@
-```js id="e6k2pv"
 const FOLDER = './data/';
 
 const FILES = {
@@ -25,16 +24,14 @@ function parseCSV(text) {
         .split('\n')
         .slice(1)
         .map(line =>
-            line
-                .split(',')
-                .map(v =>
-                    v.trim().replace(/^"|"$/g, '')
-                )
+            line.split(',').map(v =>
+                v.trim().replace(/^"|"$/g, '')
+            )
         );
 }
 
 // ======================================
-// CARGA INICIAL
+// CARGA ARCHIVOS
 // ======================================
 
 async function init() {
@@ -50,15 +47,10 @@ async function init() {
                 const response =
                     await fetch(file);
 
-                console.log(
-                    file,
-                    response.status
-                );
-
                 if (!response.ok) {
 
                     throw new Error(
-                        'No se pudo cargar: ' + file
+                        'No se pudo cargar ' + file
                     );
                 }
 
@@ -116,7 +108,7 @@ function poblarMenuInicial() {
         const opt =
             document.createElement('option');
 
-        opt.value = row[0];
+        opt.value = String(row[0]).trim();
 
         opt.textContent = row[1];
 
@@ -132,7 +124,8 @@ document.getElementById(
     'select-localizacion'
 ).addEventListener('change', e => {
 
-    const locId = e.target.value;
+    const locId =
+        String(e.target.value).trim();
 
     console.log(
         'LOCALIZACION:',
@@ -167,10 +160,16 @@ document.getElementById(
     // ======================================
 
     const enfIds = db.mapeo
-        .filter(m =>
-            m[2] === locId
-        )
-        .map(m => m[1]);
+        .filter(m => {
+
+            return (
+                String(m[2]).trim() ===
+                locId
+            );
+        })
+        .map(m =>
+            String(m[1]).trim()
+        );
 
     console.log(
         'ENFERMEDADES:',
@@ -186,27 +185,19 @@ document.getElementById(
     // [3] ID_Signo
     // ======================================
 
-    // ======================================
-// CORRECCION UNO
-    // ======================================
+    const sintIds = db.criterios
+        .filter(c => {
 
-const sintIds = db.criterios
-    .filter(c => {
+            const idEnf =
+                String(c[1]).trim();
 
-        const enfermedadCriterio =
-            String(c[1]).trim();
-
-        return enfIds.some(id => {
-
-            return (
-                String(id).trim() ===
-                enfermedadCriterio
+            return enfIds.includes(
+                idEnf
             );
-        });
-    })
-    .map(c => c[2]);
-
-
+        })
+        .map(c =>
+            String(c[2]).trim()
+        );
 
     console.log(
         'SINTOMAS:',
@@ -221,17 +212,17 @@ const sintIds = db.criterios
 
     unicos.forEach(sId => {
 
-        // catalogo_sintomas.csv
-        // [0] ID_Sintoma
-        // [1] Descripcion_Sintoma
-
         const sData =
-            db.sintomas.find(
-                s => s[0] === sId
-            );
+            db.sintomas.find(s => {
+
+                return (
+                    String(s[0]).trim() ===
+                    sId
+                );
+            });
 
         console.log(
-            'BUSCANDO SINTOMA:',
+            'SINTOMA:',
             sId,
             sData
         );
@@ -239,13 +230,17 @@ const sintIds = db.criterios
         if (sData) {
 
             const opt =
-                document.createElement('option');
+                document.createElement(
+                    'option'
+                );
 
             opt.value = sId;
 
             opt.textContent = sData[1];
 
-            selectSintoma.appendChild(opt);
+            selectSintoma.appendChild(
+                opt
+            );
         }
     });
 
@@ -274,7 +269,8 @@ document.getElementById(
     'select-sintoma'
 ).addEventListener('change', e => {
 
-    const sId = e.target.value;
+    const sId =
+        String(e.target.value).trim();
 
     console.log(
         'SINTOMA:',
@@ -302,11 +298,17 @@ document.getElementById(
 
     const signoIds =
         db.criterios
-        .filter(c =>
-            c[2] === sId &&
-            c[3]
+        .filter(c => {
+
+            return (
+                String(c[2]).trim() ===
+                sId
+            );
+        })
+        .map(c =>
+            String(c[3]).trim()
         )
-        .map(c => c[3]);
+        .filter(v => v !== '');
 
     console.log(
         'SIGNOS:',
@@ -319,31 +321,30 @@ document.getElementById(
     [...new Set(signoIds)]
     .forEach(sgId => {
 
-        // catalogo_signos.csv
-        // [0] ID_Signo
-        // [1] Descripcion_Signo
-
         const sgData =
-            db.signos.find(
-                sg => sg[0] === sgId
-            );
+            db.signos.find(sg => {
 
-        console.log(
-            'BUSCANDO SIGNO:',
-            sgId,
-            sgData
-        );
+                return (
+                    String(sg[0]).trim() ===
+                    sgId
+                );
+            });
 
         if (sgData) {
 
             const opt =
-                document.createElement('option');
+                document.createElement(
+                    'option'
+                );
 
             opt.value = sgId;
 
-            opt.textContent = sgData[1];
+            opt.textContent =
+                sgData[1];
 
-            selectSigno.appendChild(opt);
+            selectSigno.appendChild(
+                opt
+            );
         }
     });
 
@@ -372,14 +373,18 @@ document.getElementById(
 function mostrarDiagnostico() {
 
     const sId =
-        document.getElementById(
-            'select-sintoma'
-        ).value;
+        String(
+            document.getElementById(
+                'select-sintoma'
+            ).value
+        ).trim();
 
     const sgId =
-        document.getElementById(
-            'select-signo'
-        ).value;
+        String(
+            document.getElementById(
+                'select-signo'
+            ).value
+        ).trim();
 
     const res =
         document.getElementById(
@@ -391,21 +396,23 @@ function mostrarDiagnostico() {
     let match =
         db.criterios.find(c => {
 
-            // c[1] = enfermedad
-            // c[2] = sintoma
-            // c[3] = signo
+            const sintoma =
+                String(c[2]).trim();
+
+            const signo =
+                String(c[3]).trim();
 
             if (
                 sgId !== 'NINGUNO'
             ) {
 
                 return (
-                    c[2] === sId &&
-                    c[3] === sgId
+                    sintoma === sId &&
+                    signo === sgId
                 );
             }
 
-            return c[2] === sId;
+            return sintoma === sId;
         });
 
     console.log(
@@ -415,43 +422,36 @@ function mostrarDiagnostico() {
 
     if (!match) return;
 
-    const eId = match[1];
+    const eId =
+        String(match[1]).trim();
 
-    // ======================================
     // enfermedades.csv
-    //
     // [0] ID_Enfermedad
     // [1] Nombre_Comun
     // [2] Agente_Causal
-    // ======================================
 
     const eData =
-        db.enfermedades.find(
-            e => e[0] === eId
-        );
+        db.enfermedades.find(e => {
 
-    console.log(
-        'ENFERMEDAD:',
-        eData
-    );
+            return (
+                String(e[0]).trim() ===
+                eId
+            );
+        });
 
-    // ======================================
     // manejo_seguridad.csv
-    //
     // [0] ID_Enfermedad
     // [1] Manejo
     // [2] Marbete
-    // ======================================
 
     const mData =
-        db.manejo.find(
-            m => m[0] === eId
-        );
+        db.manejo.find(m => {
 
-    console.log(
-        'MANEJO:',
-        mData
-    );
+            return (
+                String(m[0]).trim() ===
+                eId
+            );
+        });
 
     document.getElementById(
         'diag-nombre'
@@ -538,4 +538,3 @@ function mostrarDiagnostico() {
 // ======================================
 
 init();
-```

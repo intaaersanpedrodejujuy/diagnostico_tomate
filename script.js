@@ -1,4 +1,3 @@
-```js
 const FOLDER = './data/';
 
 const FILES = {
@@ -384,4 +383,3 @@ function mostrarDiagnostico() {
 }
 
 init();
-```

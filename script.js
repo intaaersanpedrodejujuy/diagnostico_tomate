@@ -186,11 +186,27 @@ document.getElementById(
     // [3] ID_Signo
     // ======================================
 
-    const sintIds = db.criterios
-        .filter(c =>
-            enfIds.includes(c[1])
-        )
-        .map(c => c[2]);
+    // ======================================
+// CORRECCION UNO
+    // ======================================
+
+const sintIds = db.criterios
+    .filter(c => {
+
+        const enfermedadCriterio =
+            String(c[1]).trim();
+
+        return enfIds.some(id => {
+
+            return (
+                String(id).trim() ===
+                enfermedadCriterio
+            );
+        });
+    })
+    .map(c => c[2]);
+
+
 
     console.log(
         'SINTOMAS:',

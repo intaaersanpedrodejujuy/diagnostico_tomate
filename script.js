@@ -101,6 +101,80 @@ function poblarMenuInicial() {
 
     ...
 }
+
+// ======================================
+// MENU PARTE PLANTA
+// ======================================
+
+function poblarMenuInicial() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const locId =
+        params.get('loc');
+
+    if (!locId) {
+
+        console.error(
+            'No se recibió localización'
+        );
+
+        return;
+    }
+
+    const select =
+        document.getElementById(
+            'select-localizacion'
+        );
+
+    select.innerHTML = '';
+
+    db.partes.forEach(row => {
+
+        const opt =
+            document.createElement('option');
+
+        opt.value =
+            String(row[0]).trim();
+
+        opt.textContent =
+            row[1];
+
+        select.appendChild(opt);
+    });
+
+    // Selecciona automáticamente la parte elegida
+    select.value = locId;
+
+    // Muestra el nombre en pantalla
+    const parte =
+        db.partes.find(row =>
+            String(row[0]).trim() === locId
+        );
+
+    if (parte) {
+
+        const etiqueta =
+            document.getElementById(
+                'parte-seleccionada'
+            );
+
+        if (etiqueta) {
+
+            etiqueta.textContent =
+                parte[1];
+        }
+    }
+
+    // Fuerza la carga de síntomas
+    select.dispatchEvent(
+        new Event('change')
+    );
+}
+
 // ======================================
 // LOCALIZACION -> SINTOMAS
 // ======================================

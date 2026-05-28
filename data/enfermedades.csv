@@ -1,0 +1,27 @@
+ID_Enfermedad,Nombre_Comun,Agente_Causal
+01,Tizón temprano,Alternaria solani
+02,Mancha gris,Stemphylium solani
+03,Marchitez por fusarium,Fusarium oxysporum
+04,Polvillo o cenicilla,Oidium lycopersici
+05,Chupadera,Fusarium / Phytophthora
+06,Moho gris,Botrytis cinerea
+07,Podredumbre por colletotrichum,Colletotrichum spp.
+08,Moho de la hoja,Fulvia fulva
+09,Raíz corchosa,Sin determinación
+10,Moho blanco,Sclerotinia sclerotiorum
+11,Pata blanca,Sclerotium rolfsii
+12,Marchitez por verticillium,Verticillium daliae
+13,Tizón tardío,Phytophthora infestans
+14,Marchitamiento bacteriano,Ralstonia solanacearum
+15,Médula hueca,Pseudomonas corrugata
+16,Cancro Bacteriano,Clavibacter michiganensis
+17,Mancha bacteriana,Xanthomonas spp.
+18,Podredumbre blanda,Erwinia carotovora
+19,Begomovirus,Especies de begomovirus
+20,Hojas cordón de zapato,Cucumber mosaic virus
+21,Peste negra,GRSV / TSWV / TCSV
+22,Decoloración del fruto,Toxinas de mosca blanca
+23,Cabello de ángel,Cuscuta spp.
+24,Quemadura por frío,Bajas temperaturas
+25,Amarillamiento apical,Deriva por herbicida
+26,2,4D,Deriva por herbicida

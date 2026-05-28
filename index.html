@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+Enfermedades del Tomate
+</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:20px;
+    background:#f5f5f5;
+}
+
+.container{
+    max-width:350px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:20px;
+}
+
+.card{
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    color:#333;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.15);
+
+    transition:.2s;
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.2);
+}
+
+.card img{
+
+    width:100px;
+
+    height:100px;
+
+    object-fit:contain;
+
+    margin-bottom:10px;
+}
+
+.card span{
+
+    display:block;
+
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+Enfermedades del Tomate
+</h1>
+
+<div class="grid">
+
+<a class="card" href="sintomas.html?loc=L01">
+<img src="images/iconos/semilla.png">
+<span>Semilla</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L02">
+<img src="images/iconos/raiz.png">
+<span>Raíz</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L03">
+<img src="images/iconos/cuello.png">
+<span>Cuello</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L04">
+<img src="images/iconos/tallo.png">
+<span>Tallo</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L05">
+<img src="images/iconos/hoja.png">
+<span>Hoja</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L06">
+<img src="images/iconos/flor.png">
+<span>Flor</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L07">
+<img src="images/iconos/fruto.png">
+<span>Fruto</span>
+</a>
+
+<a class="card" href="sintomas.html?loc=L08">
+<img src="images/iconos/planta.png">
+<span>Planta completa</span>
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

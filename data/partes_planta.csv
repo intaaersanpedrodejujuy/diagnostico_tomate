@@ -1,0 +1,9 @@
+ID_Localizacion,Parte_de_la_Planta,Descripcion_segun_la_fuente,Icono
+L01,Semilla,Material vegetal de propagación,semilla.png
+L02,Raíz,Sistema radicular principal y secundarias,raíz.png
+L03,Cuello,Zona de contacto entre el tallo y el suelo,cuello.png
+L04,Tallo,Estructura herbácea principal y ramificaciones,tallo.png
+L05,Hoja,Incluye folíolos y pecíolos con pelos pequeños,hoja.png
+L06,Flores,Órganos reproductivos (pétalos y cáliz),flor.png
+L07,Fruto,Tomates en distintos estados de madurez,fruto.png
+L08,Toda la planta,Afecciones sistémicas o generales,planta.png

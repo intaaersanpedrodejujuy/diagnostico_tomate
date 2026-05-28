@@ -91,19 +91,31 @@ async function init() {
 
 function poblarMenuInicial() {
 
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const locId =
+        params.get('loc');
+
+    if (!locId) {
+
+        console.error(
+            'No se recibió localización'
+        );
+
+        return;
+    }
+
     const select =
         document.getElementById(
             'select-localizacion'
         );
 
-    select.innerHTML =
-        '<option value="">Seleccione parte de la planta...</option>';
+    select.innerHTML = '';
 
     db.partes.forEach(row => {
-
-        // partes_planta.csv
-        // [0] ID_Localizacion
-        // [1] Parte_de_la_Planta
 
         const opt =
             document.createElement('option');
@@ -116,6 +128,26 @@ function poblarMenuInicial() {
 
         select.appendChild(opt);
     });
+
+    select.value = locId;
+
+    const parte =
+        db.partes.find(row =>
+            String(row[0]).trim() ===
+            locId
+        );
+
+    if (parte) {
+
+        document.getElementById(
+            'parte-seleccionada'
+        ).textContent =
+            parte[1];
+    }
+
+    select.dispatchEvent(
+        new Event('change')
+    );
 }
 
 // ======================================

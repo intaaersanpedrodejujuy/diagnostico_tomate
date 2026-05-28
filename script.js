@@ -1,4 +1,3 @@
-```js
 function poblarMenuInicial() {
 
     const params =
@@ -70,4 +69,3 @@ function poblarMenuInicial() {
         new Event('change')
     );
 }
-```

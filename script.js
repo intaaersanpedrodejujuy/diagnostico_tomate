@@ -238,47 +238,88 @@ document.getElementById(
     const unicos =
         [...new Set(sintIds)];
 
-    selectSintoma.innerHTML =
-        '<option value="">Seleccione un síntoma...</option>';
+    ////
 
-    unicos.forEach(sId => {
+selectSintoma.innerHTML = '';
 
-        const sData =
-            db.sintomas.find(s => {
+const galeria =
+    document.getElementById(
+        'galeria-sintomas'
+    );
 
-                return (
-                    String(s[0]).trim() ===
-                    sId
+galeria.innerHTML = '';
+
+unicos.forEach(sId => {
+
+    const sData =
+        db.sintomas.find(s => {
+
+            return (
+                String(s[0]).trim() ===
+                sId
+            );
+        });
+
+    if (!sData) return;
+
+    // sigue cargando el select oculto
+    const opt =
+        document.createElement('option');
+
+    opt.value = sId;
+    opt.textContent = sData[1];
+
+    selectSintoma.appendChild(opt);
+
+    // crea la tarjeta visual
+    const tarjeta =
+        document.createElement('div');
+
+    tarjeta.className =
+        'tarjeta-sintoma';
+
+    tarjeta.innerHTML = `
+        <img src="${sData[3]}" alt="${sData[1]}">
+        <h4>${sData[1]}</h4>
+        <p>${sData[2]}</p>
+    `;
+
+    tarjeta.addEventListener(
+        'click',
+        () => {
+
+            document
+                .querySelectorAll(
+                    '.tarjeta-sintoma'
+                )
+                .forEach(t =>
+                    t.classList.remove(
+                        'tarjeta-seleccionada'
+                    )
                 );
-            });
 
-        console.log(
-            'SINTOMA:',
-            sId,
-            sData
-        );
+            tarjeta.classList.add(
+                'tarjeta-seleccionada'
+            );
 
-        if (sData) {
+            selectSintoma.value = sId;
 
-            const opt =
-                document.createElement(
-                    'option'
-                );
-
-            opt.value = sId;
-
-            opt.textContent =
-                sData[1];
-
-            selectSintoma.appendChild(
-                opt
+            selectSintoma.dispatchEvent(
+                new Event('change')
             );
         }
-    });
-
-    secSintomas.classList.remove(
-        'hidden'
     );
+
+    galeria.appendChild(
+        tarjeta
+    );
+});
+
+secSintomas.classList.remove(
+    'hidden'
+);
+    
+    ////
 
     document.getElementById(
         'sec-signos'

@@ -154,133 +154,82 @@ function poblarMenuInicial() {
 // LOCALIZACION -> SINTOMAS
 // ======================================
 
-document.getElementById(
-    'select-localizacion'
-).addEventListener('change', e => {
-
-    const locId =
-        String(e.target.value).trim();
-
-    console.log(
-        'LOCALIZACION:',
-        locId
+const galeria =
+    document.getElementById(
+        'galeria-sintomas'
     );
 
-    const secSintomas =
-        document.getElementById(
-            'sec-sintomas'
-        );
+galeria.innerHTML = '';
 
-    const selectSintoma =
-        document.getElementById(
-            'select-sintoma'
-        );
+unicos.forEach(sId => {
 
-    if (!locId) {
-
-        secSintomas.classList.add(
-            'hidden'
-        );
-
-        return;
-    }
-
-    // ======================================
-    // mapeo_localizacion.csv
-    //
-    // [0] ID interno
-    // [1] ID_Enfermedad
-    // [2] ID_Localizacion
-    // ======================================
-
-    const enfIds = db.mapeo
-        .filter(m => {
+    const sData =
+        db.sintomas.find(s => {
 
             return (
-                String(m[2]).trim() ===
-                locId
+                String(s[0]).trim() ===
+                sId
             );
-        })
-        .map(m =>
-            String(m[1]).trim()
-        );
+        });
 
-    console.log(
-        'ENFERMEDADES:',
-        enfIds
-    );
+    if (!sData) return;
 
-    // ======================================
-    // diagnostico_criterio.csv
-    //
-    // [0] ID interno
-    // [1] ID_Enfermedad
-    // [2] ID_Sintoma
-    // [3] ID_Signo
-    // ======================================
+    const tarjeta =
+        document.createElement('div');
 
-    const sintIds = db.criterios
-        .filter(c => {
+    tarjeta.className =
+        'tarjeta-sintoma';
 
-            return enfIds.includes(
-                String(c[1]).trim()
-            );
-        })
-        .map(c =>
-            String(c[2]).trim()
-        );
+    tarjeta.innerHTML = `
 
-    console.log(
-        'SINTOMAS:',
-        sintIds
-    );
+        <img src="${sData[3]}" alt="${sData[1]}">
 
-    const unicos =
-        [...new Set(sintIds)];
+        <h4>${sData[1]}</h4>
 
-    selectSintoma.innerHTML =
-        '<option value="">Seleccione un síntoma...</option>';
+        <p>${sData[2]}</p>
 
-    unicos.forEach(sId => {
+    `;
 
-        const sData =
-            db.sintomas.find(s => {
+    tarjeta.addEventListener(
+        'click',
+        () => {
 
-                return (
-                    String(s[0]).trim() ===
-                    sId
-                );
-            });
-
-        console.log(
-            'SINTOMA:',
-            sId,
-            sData
-        );
-
-        if (sData) {
-
-            const opt =
-                document.createElement(
-                    'option'
+            document
+                .querySelectorAll(
+                    '.tarjeta-sintoma'
+                )
+                .forEach(t =>
+                    t.classList.remove(
+                        'tarjeta-seleccionada'
+                    )
                 );
 
-            opt.value = sId;
+            tarjeta.classList.add(
+                'tarjeta-seleccionada'
+            );
 
-            opt.textContent =
-                sData[1];
+            document.getElementById(
+                'select-sintoma'
+            ).value = sId;
 
-            selectSintoma.appendChild(
-                opt
+            document.getElementById(
+                'select-sintoma'
+            ).dispatchEvent(
+                new Event('change')
             );
         }
-    });
-
-    secSintomas.classList.remove(
-        'hidden'
     );
 
-    document.getElementById(
+    galeria.appendChild(
+        tarjeta
+    );
+});
+
+secSintomas.classList.remove(
+    'hidden'
+);
+
+document.getElementById(
         'sec-signos'
     ).classList.add(
         'hidden'

@@ -1,0 +1,37 @@
+ID_Sintoma,Descripcion_Sintoma,Descripcion_Corta,Imagen
+S01,Manchas circulares café con anillos concéntricos,En las hojas inferiores e internas de plantas adultas se observan manchas circulares de color café, por lo general rodeadas de un borde amarillo. Bajo condiciones predisponentes, estas lesiones incrementan su tamaño y avanzan afectando las zonas media y alta de la planta. Las manchas se caracterizan por tener anillos concéntricos de color oscuro y aspecto pulverulento.,images/sintomas/hoja_alternaria_solani.png
+S02,Estrangulamiento marcado en el cuello de la planta,En plantines, a nivel del cuello, se forman lesiones de tejido muerto (necrósis) que terminan por estrangularlas.,images/sintomas/tallo_alternaria_solani.png
+S03,Lesiones pequeñas castaño oscuro con centro claro,Los primeros síntomas se manifiestan en hojas jóvenes, tallos, tanto en plantines como en plantas adultas. Las lesiones son pequeñas, de color castaño oscuro y borde desuniforme. Posteriormente estas lesiones se tornan claras en el centro y en determinadas condiciones, se desprenden dejando la hoja con múltiples perforaciones.,images/sintomas/hoja_stemphylium_solani.png
+S04,Perforaciones en el tejido foliar (manchas que se desprenden).
+S05,Marchitamiento temporal o paulatino.
+S06,Amarillamiento de hojas basales.
+S07,Oscurecimiento de los vasos internos o tejido de conducción.
+S08,Manchas blancas circulares (a veces de aspecto polvoriento),En la cara superior de las hojas basales se observan manchas circulares de color blanco de aspecto polvoriento, que pueden producir las caídas de las hojas. También se observan la formación de áreas irregulares de color amarillo que eventualmente se transforman en tejido muerto (necrosis). Las manchas circulares de color blanco de aspecto pulverulento (signo), son difíciles de observar.,images/sintomas/hoja_oidium_lycopersiciy.png
+S09,Áreas amarillas irregulares que progresan a necrosis
+S10,Lesiones necróticas en pétalos o cálices
+S11,Manchas oscuras pequeñas en frutos
+S12,Manchas amarillas con borde difuso en cara superior de la hoja
+S13,Resquebrajamientos longitudinales con aspecto de corcho en raíz
+S14,Lesiones acuosas en tallo o fruto
+S15,"Necrosis en forma de 'V' característica en bordes foliares
+S16,Manchas aceitosas en hojas
+S17,Zonas color chocolate en frutos
+S18,Marchitamiento repentino e irreversible (inicia en ápice)
+S19,Médula del tallo marrón desintegrada o hueca
+S20,Marchitamiento unilateral de hojas (un solo lado de la planta)
+S21,Necrosis en bordes de hojas y a lo largo del tallo
+S22,Síntoma de 'ojo de pájaro' en fruto
+S23,Formación de cancros (llagas) en el tallo
+S24,Manchas de fruto con centro resquebrajado
+S25,Oscurecimiento externo del tallo (podredumbre de tejidos)
+S26,Fruto con aspecto de bolsa de agua (descomposición interna)
+S27,Achaparramiento y enanismo generalizado
+S28,Moteado clorótico y acartuchamiento de hojas
+S29,Hojas estrechas reducidas a la nervadura central
+S30,Bronceado de hojas con presencia de anillos concéntricos
+S31,Frutos deformados con lesiones circulares concéntricas
+S32,Zonas verdes persistentes en fruto y pulpa madura
+S33,Guías amarillas de maleza parásita envolviendo la planta
+S34,Oscurecimiento de bordes foliares y brotes (daño por frío)
+S35,Amarillamiento marcado en la base de hojas jóvenes (ápice) 
+S36,Hojas deformadas en forma de punta de lanza o hilos

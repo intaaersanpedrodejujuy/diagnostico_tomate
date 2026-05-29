@@ -261,9 +261,6 @@ unicos.forEach(sId => {
         });
 
     if (!sData) return;
-/// temporalmente
-console.log(sData);
-/// temporalmente
     
     // sigue cargando el select oculto
     const opt =

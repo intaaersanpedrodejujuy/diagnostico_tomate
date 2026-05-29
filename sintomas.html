@@ -1,0 +1,230 @@
+const galeria =
+    document.getElementById(
+        'galeria-sintomas'
+    );
+
+galeria.innerHTML = '';
+
+unicos.forEach(sId => {
+
+    const sData =
+        db.sintomas.find(s => {
+
+            return (
+                String(s[0]).trim() ===
+                sId
+            );
+        });
+
+    if (!sData) return;
+
+    const tarjeta =
+        document.createElement('div');
+
+    tarjeta.className =
+        'tarjeta-sintoma';
+
+    tarjeta.innerHTML = `
+
+        <img src="${sData[3]}" alt="${sData[1]}">
+
+        <h4>${sData[1]}</h4>
+
+        <p>${sData[2]}</p>
+
+    `;
+
+    tarjeta.addEventListener(
+        'click',
+        () => {
+
+            document
+                .querySelectorAll(
+                    '.tarjeta-sintoma'
+                )
+                .forEach(t =>
+                    t.classList.remove(
+                        'tarjeta-seleccionada'
+                    )
+                );
+
+            tarjeta.classList.add(
+                'tarjeta-seleccionada'
+            );
+
+            document.getElementById(
+                'select-sintoma'
+            ).value = sId;
+
+            document.getElementById(
+                'select-sintoma'
+            ).dispatchEvent(
+                new Event('change')
+            );
+        }
+    );
+
+    galeria.appendChild(
+        tarjeta
+    );
+});
+
+secSintomas.classList.remove(
+    'hidden'
+);<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Diagnóstico de Enfermedades del Tomate
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script
+        src="script.js"
+        defer
+    ></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Diagnóstico de Enfermedades del Tomate
+        </h1>
+
+        <!-- ================================= -->
+        <!-- PARTE SELECCIONADA -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Parte observada
+            </h2>
+
+            <p id="parte-seleccionada">
+                Cargando...
+            </p>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- LOCALIZACION OCULTA -->
+        <!-- ================================= -->
+
+        <select
+            id="select-localizacion"
+            style="display:none;"
+        >
+        </select>
+
+        <!-- ================================= -->
+        <!-- SINTOMAS -->
+        <!-- ================================= -->
+
+	<section
+    		id="sec-sintomas"
+		class="hidden"
+	>
+
+	<h3>
+        Seleccione el síntoma que más se parece
+    	</h3>
+
+	    <div id="galeria-sintomas">
+
+
+	<select
+    	id="select-sintoma"
+    	style="display:none;"
+	>
+	</select>
+
+	    </div>
+
+	</section>
+
+        <!-- ================================= -->
+        <!-- SIGNOS -->
+        <!-- ================================= -->
+
+        <section
+            id="sec-signos"
+            class="hidden"
+        >
+
+            <label for="select-signo">
+                Signos observados
+            </label>
+
+            <select id="select-signo">
+
+                <option value="NINGUNO">
+                    Ninguno / No se observa
+                </option>
+
+            </select>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- RESULTADO -->
+        <!-- ================================= -->
+
+        <section
+            id="resultado"
+            class="hidden"
+        >
+
+            <h2 id="diag-nombre">
+                Diagnóstico
+            </h2>
+
+            <p id="diag-agente"></p>
+
+            <h3>
+                Manejo sugerido
+            </h3>
+
+            <p id="diag-manejo"></p>
+
+            <div id="alerta-seguridad"></div>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- VOLVER -->
+        <!-- ================================= -->
+
+        <section>
+
+            <p>
+
+                <a href="index.html">
+                    ← Cambiar parte de la planta
+                </a>
+
+            </p>
+
+        </section>
+
+    </div>
+
+</body>
+
+</html>
